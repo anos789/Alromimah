@@ -1,13 +1,14 @@
 workflows:
-  android-native:
-    name: Marium MEXC Native Android Build
-    max_build_duration: 60
-    instance_type: mac_mini_m1
+  marium-mexc-android:
+    name: Marium MEXC Android Build
+    max_build_duration: 120
+    instance_type: mac_mini_m2
     environment:
+      java: 21
       groups:
-        - keystore_credentials # You can define these in Codemagic UI if needed
+        - keystore_credentials # Group in Codemagic UI that can contain CM_KEYSTORE_PASSWORD
       vars:
-        PACKAGE_NAME: "com.example"
+        PACKAGE_NAME: "com.aistudio.mariummexc.abnasr"
     triggering:
       events:
         - push
@@ -29,12 +30,22 @@ workflows:
               echo "Created empty .env"
             fi
           fi
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Grant Execute Permission to Gradle Wrapper
         script: |
           chmod +x gradlew
-      - name: Build Release and Debug APKs
+      - name: Build Android APKs
         script: |
-          # Build both debug and release APKs
+          # Build both debug and release APKs for continuous integration
           ./gradlew assembleDebug assembleRelease --stacktrace
     artifacts:
       - app/build/outputs/apk/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - anosanam5@gmail.com
+        notify:
+          success: true
+          failure: true

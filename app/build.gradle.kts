@@ -1,4 +1,5 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
@@ -25,20 +26,68 @@ android {
 
   signingConfigs {
     create("release") {
-      val envPath = System.getenv("KEYSTORE_PATH")
-      val fallbackFile = file("${rootDir}/my-upload-key.jks")
-      val storeFileTarget = if (!envPath.isNullOrEmpty()) {
-        file(envPath)
-      } else if (fallbackFile.exists()) {
-        fallbackFile
+      val keyPropsFile = rootProject.file("key.properties")
+      if (keyPropsFile.exists()) {
+        val keyProps = Properties()
+        keyPropsFile.inputStream().use { keyProps.load(it) }
+        
+        fun resolveValue(raw: String?): String? {
+          if (raw == null) return null
+          if (raw.startsWith("\${") && raw.endsWith("}")) {
+            val envVarName = raw.substring(2, raw.length - 1)
+            return System.getenv(envVarName) ?: ""
+          }
+          if (raw.startsWith("$")) {
+            val envVarName = raw.substring(1)
+            return System.getenv(envVarName) ?: ""
+          }
+          return raw
+        }
+        
+        val storeFilePath = resolveValue(keyProps.getProperty("storeFile")) ?: "app/upload-keystore.jks"
+        val storeFileCandidate = if (file(storeFilePath).exists()) {
+          file(storeFilePath)
+        } else if (rootProject.file(storeFilePath).exists()) {
+          rootProject.file(storeFilePath)
+        } else if (file("upload-keystore.jks").exists()) {
+          file("upload-keystore.jks")
+        } else if (rootProject.file("upload-keystore.jks").exists()) {
+          rootProject.file("upload-keystore.jks")
+        } else {
+          file("${rootDir}/debug.keystore")
+        }
+        
+        val resolvedStorePassword = resolveValue(keyProps.getProperty("storePassword"))?.takeIf { it.isNotEmpty() }
+          ?: System.getenv("STORE_PASSWORD")
+        val resolvedKeyPassword = resolveValue(keyProps.getProperty("keyPassword"))?.takeIf { it.isNotEmpty() }
+          ?: System.getenv("KEY_PASSWORD")
+
+        val finalStoreFile = if (resolvedStorePassword.isNullOrEmpty() || resolvedStorePassword == "android") {
+          file("${rootDir}/debug.keystore")
+        } else {
+          storeFileCandidate
+        }
+
+        storeFile = finalStoreFile
+        storePassword = resolvedStorePassword ?: "android"
+        keyAlias = if (finalStoreFile.name == "debug.keystore") "androiddebugkey" else (resolveValue(keyProps.getProperty("keyAlias")) ?: "upload")
+        keyPassword = resolvedKeyPassword ?: "android"
       } else {
-        file("${rootDir}/debug.keystore")
+        val envPath = System.getenv("KEYSTORE_PATH")
+        val fallbackFile = file("${rootDir}/my-upload-key.jks")
+        val storeFileTarget = if (!envPath.isNullOrEmpty()) {
+          file(envPath)
+        } else if (fallbackFile.exists()) {
+          fallbackFile
+        } else {
+          file("${rootDir}/debug.keystore")
+        }
+        
+        storeFile = storeFileTarget
+        storePassword = System.getenv("STORE_PASSWORD") ?: "android"
+        keyAlias = if (storeFileTarget.name == "debug.keystore") "androiddebugkey" else "upload"
+        keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
       }
-      
-      storeFile = storeFileTarget
-      storePassword = System.getenv("STORE_PASSWORD") ?: "android"
-      keyAlias = if (storeFileTarget.name == "debug.keystore") "androiddebugkey" else "upload"
-      keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
     }
     create("debugConfig") {
       storeFile = file("${rootDir}/debug.keystore")
