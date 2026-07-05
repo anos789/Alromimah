@@ -11,9 +11,11 @@ workflows:
     triggering:
       events:
         - push
-      branches:
-        - main
-        - master
+      when:
+        watching:
+          branches:
+            - main
+            - master
     scripts:
       - name: Set up Environment Secrets
         script: |
