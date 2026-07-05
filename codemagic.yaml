@@ -1,26 +1,51 @@
 workflows:
-  android-release-workflow:
-    name: Android Production Build
-    max_build_duration: 60
+  marium-mexc-android:
+    name: Marium MEXC Android Build
+    max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
-      android_signing:
-        - keystore
+      java: 21
       groups:
-        - keystore_credentials
+        - keystore_credentials # Group in Codemagic UI that can contain CM_KEYSTORE_PASSWORD
+      vars:
+        PACKAGE_NAME: "com.aistudio.mariummexc.abnasr"
     triggering:
       events:
         - push
-      branch_patterns:
-        - main
+      when:
+        watching:
+          branches:
+            - main
+            - master
     scripts:
-      - name: تثبيت الاعتمادات
-        script: flutter pub get
-      - name: بناء حزمة التطبيق AAB
-        script: flutter build appbundle --release
+      - name: Set up Environment Secrets
+        script: |
+          echo "=== Preparing Environment Variables ==="
+          if [ ! -f ".env" ]; then
+            if [ -f ".env.example" ]; then
+              cp .env.example .env
+              echo "Copied .env.example to .env"
+            else
+              touch .env
+              echo "Created empty .env"
+            fi
+          fi
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Grant Execute Permission to Gradle Wrapper
+        script: |
+          chmod +x gradlew
+      - name: Build Android APKs
+        script: |
+          # Build both debug and release APKs for continuous integration
+          ./gradlew assembleDebug assembleRelease --stacktrace
     artifacts:
-      - build/app/outputs/bundle/release/app-release.aab
+      - app/build/outputs/apk/**/*.apk
     publishing:
-      google_play:
-        track: internal
-        submit_as_draft: false
+      email:
+        recipients:
+          - anosanam5@gmail.com
+        notify:
+          success: true
+          failure: true
