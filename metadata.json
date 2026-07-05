@@ -1,0 +1,6 @@
+{
+  "name": "Marium MEXC",
+  "description": "تطبيق تداول متقدم مدمج بالذكاء الاصطناعي لمراقبة الأسعار، إدارة المحافظ، وتحليل البيانات المالية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

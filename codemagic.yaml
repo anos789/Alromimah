@@ -1,0 +1,38 @@
+workflows:
+  android-native:
+    name: Marium MEXC Native Android Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      groups:
+        - keystore_credentials # You can define these in Codemagic UI if needed
+      vars:
+        PACKAGE_NAME: "com.example"
+    triggering:
+      events:
+        - push
+      branches:
+        - main
+        - master
+    scripts:
+      - name: Set up Environment Secrets
+        script: |
+          echo "=== Preparing Environment Variables ==="
+          if [ ! -f ".env" ]; then
+            if [ -f ".env.example" ]; then
+              cp .env.example .env
+              echo "Copied .env.example to .env"
+            else
+              touch .env
+              echo "Created empty .env"
+            fi
+          fi
+      - name: Grant Execute Permission to Gradle Wrapper
+        script: |
+          chmod +x gradlew
+      - name: Build Release and Debug APKs
+        script: |
+          # Build both debug and release APKs
+          ./gradlew assembleDebug assembleRelease --stacktrace
+    artifacts:
+      - app/build/outputs/apk/**/*.apk
