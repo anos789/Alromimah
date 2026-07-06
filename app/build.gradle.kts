@@ -12,12 +12,12 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.mariummexc.abnasr"
     minSdk = 24
-    targetSdk = 36
+    targetSdk = 35
     versionCode = 1
     versionName = "1.0"
 
@@ -53,8 +53,14 @@ android {
           file("upload-keystore.jks")
         } else if (rootProject.file("upload-keystore.jks").exists()) {
           rootProject.file("upload-keystore.jks")
+        } else if (project.file("app/upload-keystore.jks").exists()) {
+          project.file("app/upload-keystore.jks")
+        } else if (rootProject.file("app/upload-keystore.jks").exists()) {
+          rootProject.file("app/upload-keystore.jks")
+        } else if (System.getenv("KEYSTORE_PATH")?.isNotEmpty() == true) {
+          file(System.getenv("KEYSTORE_PATH"))
         } else {
-          file("${rootDir}/debug.keystore")
+          file("${rootDir}/upload-keystore.jks")
         }
         
         val resolvedStorePassword = resolveValue(keyProps.getProperty("storePassword"))?.takeIf { it.isNotEmpty() }
@@ -62,16 +68,16 @@ android {
         val resolvedKeyPassword = resolveValue(keyProps.getProperty("keyPassword"))?.takeIf { it.isNotEmpty() }
           ?: System.getenv("KEY_PASSWORD")
 
-        val finalStoreFile = if (resolvedStorePassword.isNullOrEmpty() || resolvedStorePassword == "android") {
-          file("${rootDir}/debug.keystore")
-        } else {
+        val finalStoreFile = if (storeFileCandidate.exists()) {
           storeFileCandidate
+        } else {
+          file("${rootDir}/upload-keystore.jks")
         }
 
         storeFile = finalStoreFile
-        storePassword = resolvedStorePassword ?: "android"
-        keyAlias = if (finalStoreFile.name == "debug.keystore") "androiddebugkey" else (resolveValue(keyProps.getProperty("keyAlias")) ?: "upload")
-        keyPassword = resolvedKeyPassword ?: "android"
+        storePassword = resolvedStorePassword ?: "malek-321"
+        keyAlias = (resolveValue(keyProps.getProperty("keyAlias")) ?: "upload")
+        keyPassword = resolvedKeyPassword ?: "malek-321"
       } else {
         val envPath = System.getenv("KEYSTORE_PATH")
         val fallbackFile = file("${rootDir}/my-upload-key.jks")
@@ -84,9 +90,9 @@ android {
         }
         
         storeFile = storeFileTarget
-        storePassword = System.getenv("STORE_PASSWORD") ?: "android"
+        storePassword = System.getenv("STORE_PASSWORD") ?: "malek-321"
         keyAlias = if (storeFileTarget.name == "debug.keystore") "androiddebugkey" else "upload"
-        keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
+        keyPassword = System.getenv("KEY_PASSWORD") ?: "malek-321"
       }
     }
     create("debugConfig") {
@@ -109,8 +115,8 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
   buildFeatures {
     compose = true
