@@ -164,7 +164,7 @@ workflows:
   primary:
     steps:
     - activate-ssh-key@4:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | notempty}}'
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@8: {}
     - cache-pull@2: {}
     - install-missing-android-tools@3:
