@@ -1,0 +1,6 @@
+{
+  "name": "mrium-mexc-trial",
+  "description": "Real-time MEXC futures and spot algorithmic trading bot dashboard and Bitrise automation controller, styled as a high-fidelity full-screen mobile app optimized for LT_9904 running Android 15.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
