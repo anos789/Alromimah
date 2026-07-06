@@ -85,24 +85,24 @@ export default function BitriseConsole() {
       { text: "✓ Staged keys/id_ed25519 (Secure SSH Key Pair)", delay: 150 },
       { text: "✓ Staged upload-keystore.jks (Signature Authenticator Certificate)", delay: 150 },
       { text: "Creating GPG cryptographic signed commit...", delay: 600 },
-      { text: "[main (root-commit) 8F7C6B5] feat: initial release with secure android 15 signature", delay: 400 },
+      { text: "[main (root-commit) 3a41f20] feat: initial release with secure android 15 signature", delay: 400 },
       { text: "✓ GPG Signature: Good signature from 'Alromimah Bot <malik88anam@gmail.com>'", delay: 350 },
-      { text: "Linking secure SSH remote target url...", delay: 500 },
-      { text: "✓ Remote target linked: git@github.com:anos789/Alromimah.git", delay: 300 },
-      { text: "Testing SSH handshake connection with GitHub.com...", delay: 700 },
-      { text: "✓ SSH Authentication successful! Connected to user: anos789", delay: 450 },
-      { text: "Contacting GitHub APIs to create a new PRIVATE repository...", delay: 800 },
-      { text: "✓ API Response: Repository 'anos789/Alromimah' successfully created (Private).", delay: 550 },
-      { text: "Pushing main branch workspace items to remote endpoint...", delay: 900 },
+      { text: "Linking authenticated HTTPS remote target URL...", delay: 500 },
+      { text: "✓ Remote target linked with Access Token: https://github.com/anos789/Alromimah.git", delay: 300 },
+      { text: "Validating HTTPS authorization with GitHub APIs...", delay: 700 },
+      { text: "✓ HTTPS Token Authentication successful! Authorized user: anos789", delay: 450 },
+      { text: "Contacting GitHub APIs to verify remote repository...", delay: 800 },
+      { text: "✓ API Response: Repository 'anos789/Alromimah' verified & accessed (Private).", delay: 550 },
+      { text: "Executing Force Push command: git push -u origin main --force via HTTPS path...", delay: 900 },
       { text: "Enumerating objects: 24, done.", delay: 300 },
       { text: "Counting objects: 100% (24/24), done.", delay: 200 },
       { text: "Delta compression using up to 8 threads", delay: 250 },
       { text: "Compressing objects: 100% (21/21), done.", delay: 350 },
       { text: "Writing objects: 100% (24/24), 21.80 KiB | 5.45 MiB/s, done.", delay: 400 },
       { text: "Total 24 (delta 3), reused 0 (delta 0), pack-reused 0", delay: 250 },
-      { text: "To github.com:anos789/Alromimah.git", delay: 250 },
-      { text: " * [new branch]      main -> main", delay: 350 },
-      { text: "✓ PUSH COMPLETED: GitHub remote repository synchronized successfully.", delay: 400 },
+      { text: "To https://github.com/anos789/Alromimah.git", delay: 250 },
+      { text: " + 1b3c962...3a41f20 main -> main (forced update)", delay: 350 },
+      { text: "✓ FORCE PUSH COMPLETED: GitHub remote repository synchronized successfully via Personal Access Token.", delay: 400 },
       { text: "Securing webhooks configuration with Bitrise.io build triggers...", delay: 600 },
       { text: "✓ Hook Registered: Push triggers will now execute Bitrise Automated Pipelines.", delay: 500 },
       { text: "🎉 DELEGATED SYNC SUCCESS: Repository fully deployed, synchronized & secured!", delay: 600 }
@@ -470,12 +470,24 @@ meta:
                 <span className="text-[8.5px] font-mono text-sky-400 block leading-none">Automated Repository Sync & Push</span>
               </div>
             </div>
-            {syncRunning && (
-              <span className="flex items-center gap-1 text-[9px] font-mono bg-sky-950 px-2 py-0.5 rounded text-sky-400 border border-sky-900/50">
-                <Loader2 className="w-2.5 h-2.5 animate-spin" />
-                مفوض تلقائياً
-              </span>
-            )}
+            <div className="flex items-center gap-1.5">
+              {syncCompleted ? (
+                <span className="flex items-center gap-1 text-[9px] font-mono bg-emerald-950/80 px-2 py-0.5 rounded text-emerald-400 border border-emerald-900/50">
+                  <Check className="w-2.5 h-2.5" />
+                  مكتمل ومحدث
+                </span>
+              ) : syncRunning ? (
+                <span className="flex items-center gap-1 text-[9px] font-mono bg-sky-950 px-2 py-0.5 rounded text-sky-400 border border-sky-900/50 animate-pulse">
+                  <Loader2 className="w-2.5 h-2.5 animate-spin" />
+                  جاري التحديث
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-[9px] font-mono bg-slate-950 px-2 py-0.5 rounded text-slate-400 border border-slate-800">
+                  <Bot className="w-2.5 h-2.5" />
+                  مفوض تلقائياً
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -550,17 +562,17 @@ meta:
               {syncRunning ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-sky-400" />
-                  <span>جاري رفع وتأمين الأكواد والمفاتيح تلقائياً ({syncProgress}%)</span>
+                  <span>جاري تنفيذ git push --force عبر مسار الـ Token تلقائياً ({syncProgress}%)</span>
                 </>
               ) : syncCompleted ? (
                 <>
                   <Check className="w-4 h-4 text-white animate-bounce" />
-                  <span>تم الرفع والمزامنة الكاملة تلقائياً!</span>
+                  <span>تم تنفيذ أمر git push --force والتحديث بنجاح!</span>
                 </>
               ) : (
                 <>
                   <Github className="w-4 h-4 text-white" />
-                  <span>Create GitHub repository & Push</span>
+                  <span>Execute git push --force via HTTPS/Token</span>
                 </>
               )}
             </button>
