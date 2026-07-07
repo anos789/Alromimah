@@ -1,24 +1,33 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@5.1.0
-
 jobs:
-  build-and-test:
+  build_apk:
     docker:
-      - image: cimg/node:20.12.0
+      - image: cirrusci/flutter:latest
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
       - run:
-          name: Run Linter (TypeScript Verification)
-          command: npm run lint
+          name: Accept Android Licenses
+          command: yes | sdkmanager --licenses || true
       - run:
-          name: Build React App and Bundle Express Server
-          command: npm run build
+          name: Clean Project
+          command: flutter clean
+      - run:
+          name: Get Flutter Packages
+          command: flutter pub get
+      - run:
+          name: Build Release APK
+          command: flutter build apk --release --no-shrink
+      - store_artifacts:
+          path: build/app/outputs/flutter-apk/app-release.apk
+          destination: app-release.apk
 
 workflows:
-  build-pipeline:
+  version: 2
+  build_and_deploy:
     jobs:
-      - build-and-test
+      - build_apk:
+          filters:
+            branches:
+              only:
+                - main
