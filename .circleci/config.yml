@@ -1,13 +1,14 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.2.0
+  android: circleci/android@3.2.0
 
 jobs:
   build_and_deploy:
     executor:
       name: android/android-machine
       resource_class: medium
+      tag: default
     environment:
       GRADLE_USER_HOME: ~/gradle
     steps:
