@@ -1,39 +1,43 @@
 version: 2.1
 
 orbs:
-  android: circleci/android@2.2.0
+  android: circleci/android@3.2.0
+
+jobs:
+  build_and_deploy:
+    executor:
+      name: android/android_machine
+      resource_class: medium
+      tag: default
+    environment:
+      GRADLE_USER_HOME: ~/gradle
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends unzip wget curl
+            chmod +x ./gradlew
+            ./gradlew dependencies
+      - run:
+          name: Configure keystore
+          command: |
+            if [ -n "${CIRCLECI_KEYSTORE_BASE64}" ]; then
+              echo "$CIRCLECI_KEYSTORE_BASE64" | base64 -d > upload-keystore.jks
+            fi
+            echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - run:
+          name: Build Release APK and AAB
+          command: |
+            chmod +x ./gradlew
+            ./gradlew clean assembleRelease bundleRelease --stacktrace
+      - store_artifacts:
+          path: app/build/outputs/apk/release
+      - store_artifacts:
+          path: app/build/outputs/bundle/release
 
 workflows:
-  android-release:
+  build_and_deploy:
     jobs:
-      - android/android-machine:
-          name: build
-          environment:
-            ANDROID_HOME: /opt/android/sdk
-            GRADLE_USER_HOME: ~/gradle
-          steps:
-            - checkout
-            - run:
-                name: Install Dependencies
-                command: |
-                  sudo apt-get update
-                  sudo apt-get install -y --no-install-recommends unzip wget curl
-                  chmod +x ./gradlew
-                  ./gradlew dependencies
-            - run:
-                name: Configure keystore
-                command: |
-                  if [ -n "${CIRCLECI_KEYSTORE_BASE64}" ]; then
-                    echo "$CIRCLECI_KEYSTORE_BASE64" | base64 -d > upload-keystore.jks
-                  fi
-                  echo "sdk.dir=$ANDROID_HOME" > local.properties
-            - run:
-                name: Build Release APK and AAB
-                command: |
-                  chmod +x ./gradlew
-                  ./gradlew clean assembleRelease bundleRelease --stacktrace
-            - store_artifacts:
-                path: app/build/outputs/apk/release
-            - store_artifacts:
-                path: app/build/outputs/bundle/release
-          resource_class: medium
+      - build_and_deploy
