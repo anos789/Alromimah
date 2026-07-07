@@ -33,17 +33,19 @@ android {
         
         fun resolveValue(raw: String?): String? {
           if (raw == null) return null
-          if (raw.startsWith("\${") && raw.endsWith("}")) {
-            val envVarName = raw.substring(2, raw.length - 1)
-            return System.getenv(envVarName) ?: ""
+          val trimmed = raw.trim()
+          if (trimmed.isEmpty()) return null
+          if (trimmed.startsWith("\${") && trimmed.endsWith("}")) {
+            val envVarName = trimmed.substring(2, trimmed.length - 1)
+            return System.getenv(envVarName)?.takeIf { it.isNotBlank() }
           }
-          if (raw.startsWith("$")) {
-            val envVarName = raw.substring(1)
-            return System.getenv(envVarName) ?: ""
+          if (trimmed.startsWith("$")) {
+            val envVarName = trimmed.substring(1)
+            return System.getenv(envVarName)?.takeIf { it.isNotBlank() }
           }
-          return raw
+          return trimmed
         }
-        
+
         val storeFilePath = resolveValue(keyProps.getProperty("storeFile")) ?: "app/upload-keystore.jks"
         val storeFileCandidate = if (file(storeFilePath).exists()) {
           file(storeFilePath)

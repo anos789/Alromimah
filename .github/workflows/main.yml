@@ -74,17 +74,17 @@ jobs:
             -dname "CN=Marium MEXC, OU=Marium, O=MEXC, L=Cairo, S=Cairo, C=EG"
         fi
 
-    - name: Build Debug & Release APK
+    - name: Build Debug, Release APK and AAB
       run: |
         echo "=== Compiling and Building Marium MEXC ==="
         
         # We set execute permission for gradlew just in case
         if [ -f "./gradlew" ]; then
           chmod +x gradlew
-          ./gradlew assembleDebug assembleRelease --stacktrace 2>&1 | tee build_output.log
+          ./gradlew assembleDebug assembleRelease bundleRelease --stacktrace 2>&1 | tee build_output.log
         else
           echo "gradlew wrapper not found. Initiating build using system Gradle..."
-          gradle assembleDebug assembleRelease --stacktrace 2>&1 | tee build_output.log
+          gradle assembleDebug assembleRelease bundleRelease --stacktrace 2>&1 | tee build_output.log
         fi
         
         # Validate build completion
@@ -110,6 +110,13 @@ jobs:
       with:
         name: marium-mexc-release-apk
         path: app/build/outputs/apk/release/app-release.apk
+        if-no-files-found: error
+
+    - name: Upload Signed Release AAB Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: marium-mexc-release-aab
+        path: app/build/outputs/bundle/release/*.aab
         if-no-files-found: error
 
     - name: Generate Diagnostics Summary on Failure

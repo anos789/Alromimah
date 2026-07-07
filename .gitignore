@@ -19,3 +19,11 @@ debug.keystore
 debug.keystore.base64
 /.build-outputs/
 
+# Local Android signing and temporary developer artifacts
+Alromimah_0707_211154.zip
+*.jks
+*.keystore
+**/upload-keystore*.jks
+**/key*.properties
+extracted-upload/
+
