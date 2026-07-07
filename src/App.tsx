@@ -18,9 +18,10 @@ import {
 import DeviceEmulator from "./components/DeviceEmulator";
 import Dashboard from "./components/Dashboard";
 import BitriseConsole from "./components/BitriseConsole";
+import TerminalView from "./components/TerminalView";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"bot" | "bitrise" | "specs">("bot");
+  const [activeTab, setActiveTab] = useState<"bot" | "bitrise" | "specs" | "terminal">("bot");
   const [useEmulator, setUseEmulator] = useState<boolean>(true);
   
   // Clocks for Unified Time Sync block
@@ -130,6 +131,8 @@ export default function App() {
             </div>
           </div>
         );
+      case "terminal":
+        return <TerminalView />;
     }
   };
 
@@ -243,6 +246,16 @@ export default function App() {
             >
               Device Specs (LT_9904)
             </button>
+            <button
+              onClick={() => setActiveTab("terminal")}
+              className={`px-4 py-2 text-xs font-bold font-mono border-b-2 transition ${
+                activeTab === "terminal" 
+                  ? "border-sky-400 text-sky-400" 
+                  : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              الطرفية Bash Terminal
+            </button>
           </div>
           
           <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-400 bg-slate-950/60 border border-slate-850 px-3 py-1.5 rounded-xl">
@@ -260,7 +273,7 @@ export default function App() {
             {/* Embedded app contents in the phone screen */}
             <div className="flex flex-col gap-3 font-sans pb-16">
               {/* Virtual App Header Tabs */}
-              <div className="grid grid-cols-3 gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+              <div className="grid grid-cols-4 gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
                 <button
                   onClick={() => setActiveTab("bot")}
                   className={`py-1.5 rounded-lg text-[9px] font-bold font-mono text-center transition ${
@@ -284,6 +297,14 @@ export default function App() {
                   }`}
                 >
                   LT Specs
+                </button>
+                <button
+                  onClick={() => setActiveTab("terminal")}
+                  className={`py-1.5 rounded-lg text-[9px] font-bold font-mono text-center transition ${
+                    activeTab === "terminal" ? "bg-sky-600 text-white" : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Terminal
                 </button>
               </div>
 

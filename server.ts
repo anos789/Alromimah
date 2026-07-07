@@ -311,6 +311,74 @@ p2f9S8b7U1p2f9S8b7U1p2f9S8b7U1p2f9S8b7U1p2f9S8b7U1p2f9S8b7U1p2f
   });
 });
 
+// API Route: Run shell command inside container
+app.post("/api/terminal/run", (req, res) => {
+  const { command, cwd = "." } = req.body;
+  if (!command) {
+    return res.status(400).json({ error: "No command specified" });
+  }
+
+  const trimmed = command.trim();
+
+  // If command is cd, we resolve it relative to current cwd and process.cwd()
+  if (trimmed.startsWith("cd")) {
+    const parts = trimmed.split(/\s+/);
+    const targetDir = parts[1] || ".";
+    const resolvedPath = path.resolve(process.cwd(), cwd, targetDir);
+
+    // Keep within workspace directory
+    if (!resolvedPath.startsWith(process.cwd())) {
+      return res.json({
+        stdout: "",
+        stderr: "cd: Permission denied (Access is restricted to the workspace root and its subdirectories).",
+        cwd: cwd
+      });
+    }
+
+    if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
+      const newRelativeCwd = path.relative(process.cwd(), resolvedPath) || ".";
+      return res.json({
+        stdout: `Changed directory to ~/${newRelativeCwd === "." ? "" : newRelativeCwd}`,
+        stderr: "",
+        cwd: newRelativeCwd === "" ? "." : newRelativeCwd
+      });
+    } else {
+      return res.json({
+        stdout: "",
+        stderr: `cd: no such file or directory: ${targetDir}`,
+        cwd: cwd
+      });
+    }
+  }
+
+  // Execute shell command
+  const resolvedCwd = path.resolve(process.cwd(), cwd);
+  try {
+    // Run with timeout (12 seconds)
+    const output = execSync(command, {
+      cwd: resolvedCwd,
+      timeout: 12000,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PAGER: "cat"
+      }
+    });
+
+    res.json({
+      stdout: output,
+      stderr: "",
+      cwd: cwd
+    });
+  } catch (error: any) {
+    res.json({
+      stdout: error.stdout || "",
+      stderr: error.stderr || error.message || "Execution error",
+      cwd: cwd
+    });
+  }
+});
+
 // Vite Middleware & Static Serving setup
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
