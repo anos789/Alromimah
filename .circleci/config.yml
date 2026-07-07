@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  flutter: circleci/flutter@2.0.0
+  flutter: circleci/flutter@2.0.4
 
 jobs:
   build_apk:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - flutter/install_sdk:
-          version: stable
+          version: 3.32.7
       - run:
           name: Clean Project
           command: flutter clean
