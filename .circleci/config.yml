@@ -1,41 +1,29 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:node:.
 version: 2.1
 orbs:
-  node: circleci/node@5
+  flutter: circleci/flutter@2.0.0
+
 jobs:
-  build-node:
-    # Build node project
-    executor: node/default
+  build_apk:
+    docker:
+      - image: cimg/android:2024.12
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - flutter/install_sdk:
+          version: stable
       - run:
-          command: npm run build
+          name: Clean Project
+          command: flutter clean
       - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      # Copy output to artifacts dir
+          name: Get Dependencies
+          command: flutter pub get
       - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
+          name: Build Release APK
+          command: flutter build apk --release --no-shrink
       - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          path: build/app/outputs/flutter-apk/app-release.apk
+          destination: app-release.apk
+
 workflows:
-  build:
+  build_and_deploy:
     jobs:
-      - build-node
-    # - deploy:
-    #     requires:
-    #       - build-node
+      - build_apk
