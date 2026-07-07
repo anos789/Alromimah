@@ -6,7 +6,7 @@ orbs:
 jobs:
   build_and_deploy:
     executor:
-      name: android/android-machine
+      name: android/android_machine
       resource_class: medium
       tag: default
     environment:
