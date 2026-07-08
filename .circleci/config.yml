@@ -4,7 +4,7 @@ orbs:
 jobs:
   build_apk:
     docker:
-      - image: cimg/android:2024.12
+      - image: cimg/android:2026.03
     steps:
       - checkout
       - flutter/install_sdk:
