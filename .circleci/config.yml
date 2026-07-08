@@ -13,18 +13,26 @@ jobs:
       GRADLE_USER_HOME: ~/gradle
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends unzip wget curl
-            chmod +x ./gradlew
-            ./gradlew dependencies
+      - restore_cache:
+          keys:
+            - gradle-v2-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle.kts" }}-{{ checksum "app/build.gradle.kts" }}
+            - gradle-v2-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - gradle-v2-
       - run:
           name: Configure keystore
           command: |
             if [ -n "${CIRCLECI_KEYSTORE_BASE64}" ]; then
               echo "$CIRCLECI_KEYSTORE_BASE64" | base64 -d > upload-keystore.jks
+            else
+              keytool -genkeypair -v \
+                -keystore upload-keystore.jks \
+                -alias upload \
+                -keyalg RSA \
+                -keysize 2048 \
+                -validity 10000 \
+                -storepass "malek-321" \
+                -keypass "malek-321" \
+                -dname "CN=Alromimah, OU=Android, O=Alromimah, L=Unknown, S=Unknown, C=US"
             fi
             echo "sdk.dir=$ANDROID_HOME" > local.properties
       - run:
@@ -32,6 +40,11 @@ jobs:
           command: |
             chmod +x ./gradlew
             ./gradlew clean assembleRelease bundleRelease --stacktrace
+      - save_cache:
+          key: gradle-v2-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle.kts" }}-{{ checksum "app/build.gradle.kts" }}
+          paths:
+            - ~/gradle/wrapper
+            - ~/gradle/caches
       - store_artifacts:
           path: app/build/outputs/apk/release
       - store_artifacts:
