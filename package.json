@@ -1,0 +1,24 @@
+{
+  "name": "my-alromimah",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boanmoban-collab/MY-Alromimah.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/boanmoban-collab/MY-Alromimah/issues"
+  },
+  "homepage": "https://github.com/boanmoban-collab/MY-Alromimah#readme",
+  "devDependencies": {
+    "babel-preset-expo": "^57.0.2"
+  }
+}
