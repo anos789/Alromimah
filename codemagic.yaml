@@ -1,0 +1,146 @@
+workflows:
+  mrium-mexc-trial-android:
+    name: Mrium MEXC Trial - Android
+    max_build_duration: 30
+    instance_type: linux_x2
+    environment:
+      groups:
+        - mrium_mexc_keys
+        - mrium_mexc_signing
+      node: 22
+      vars:
+        NODE_VERSION: "22"
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    cache:
+      cache_paths:
+        - $CM_BUILD_DIR/node_modules
+        - $HOME/.pnpm-store
+    scripts:
+      - name: Install pnpm
+        script: |
+          npm install -g pnpm
+      - name: Install dependencies
+        script: |
+          pnpm install
+      - name: Set up Android keystore
+        script: |
+          echo $ANDROID_KEYSTORE | base64 --decode > android/app/mrium.keystore
+          echo $KEYSTORE_PROPERTIES > android/keystore.properties
+      - name: Build Android APK
+        script: |
+          npx expo export --platform android
+          cd android && ./gradlew assembleRelease
+        env:
+          EXPO_PUBLIC_MEXC_API_KEY: $MEXC_API_KEY
+          EXPO_PUBLIC_MEXC_SECRET: $MEXC_SECRET
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
+    publishing:
+      email:
+        recipients:
+          - marium.mexc.trial@gmail.com
+      slack:
+        channel: "#mrium-mexc-builds"
+
+  mrium-mexc-trial-ios:
+    name: Mrium MEXC Trial - iOS
+    max_build_duration: 30
+    instance_type: mac_mini_m1
+    environment:
+      groups:
+        - mrium_mexc_keys
+        - mrium_mexc_signing_ios
+      node: 22
+      vars:
+        NODE_VERSION: "22"
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    cache:
+      cache_paths:
+        - $CM_BUILD_DIR/node_modules
+        - $HOME/.pnpm-store
+    scripts:
+      - name: Install pnpm
+        script: |
+          npm install -g pnpm
+      - name: Install dependencies
+        script: |
+          pnpm install
+      - name: Install CocoaPods
+        script: |
+          cd ios && pod install
+      - name: Build iOS IPA
+        script: |
+          xcodebuild -workspace ios/MriumMEXC.xcworkspace \
+            -scheme MriumMEXC \
+            -configuration Release \
+            -archivePath build/MriumMEXC.xcarchive \
+            archive
+          xcodebuild -exportArchive \
+            -archivePath build/MriumMEXC.xcarchive \
+            -exportPath build/ \
+            -exportOptionsPlist ios/exportOptions.plist
+        env:
+          EXPO_PUBLIC_MEXC_API_KEY: $MEXC_API_KEY
+          EXPO_PUBLIC_MEXC_SECRET: $MEXC_SECRET
+    artifacts:
+      - build/*.ipa
+    publishing:
+      email:
+        recipients:
+          - marium.mexc.trial@gmail.com
+
+  mrium-mexc-trial-release:
+    name: Mrium MEXC Trial - Full Release
+    max_build_duration: 30
+    instance_type: linux_x2
+    environment:
+      groups:
+        - mrium_mexc_keys
+        - mrium_mexc_signing
+      node: 22
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Install pnpm
+        script: |
+          npm install -g pnpm
+      - name: Install dependencies
+        script: |
+          pnpm install
+      - name: Run lint and tests
+        script: |
+          pnpm lint
+          pnpm check
+          pnpm test
+      - name: Build Android
+        script: |
+          echo $ANDROID_KEYSTORE | base64 --decode > android/app/mrium.keystore
+          npx expo export --platform android
+          cd android && ./gradlew assembleRelease
+        env:
+          EXPO_PUBLIC_MEXC_API_KEY: $MEXC_API_KEY
+          EXPO_PUBLIC_MEXC_SECRET: $MEXC_SECRET
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_API_KEY
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        key_id: $APP_STORE_CONNECT_KEY_ID

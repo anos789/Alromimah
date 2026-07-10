@@ -1,0 +1,26 @@
+# Project TODO
+
+- [x] Theme colors and branding configuration
+- [x] Icon mappings for all 5 tabs
+- [x] Home screen with BTC/USDT candlestick chart
+- [x] Bot status toggle (ON/OFF) with connection indicator
+- [x] Cloud mode (automatic 24/7) and Manual mode buttons
+- [x] API Key encrypted input section
+- [x] Investment amount, per-trade amount, leverage inputs
+- [x] Futures portfolio display with profit percentage
+- [x] Live news ticker for trading news
+- [x] Market cards (Oil, Metals, Stocks)
+- [x] Rewards harvester with 10-min countdown
+- [x] Portfolio screen with risk management
+- [x] Initial Margin and Maintenance Margin calculations
+- [x] Risk-to-Reward ratio checking
+- [x] Trades screen with open/closed positions
+- [x] Reports screen with performance summary
+- [x] Settings screen with API config and security
+- [x] MEXC API gateway service
+- [x] Portfolio supervisor security system
+- [x] CI/CD: GitHub Actions workflow
+- [x] CI/CD: CircleCI config
+- [x] CI/CD: CodeMagic config
+- [x] Bottom tab navigation (Portfolio, Trades, Home, Reports, Settings)
+- [x] Generate app logo and update branding
