@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "b680b8c8-188a-41b4-94dc-8e749844338e"
+      }
+    },
+    "android": {
+      "package": "com.alromimahsteam.myalromimah"
+    }
+  }
+}
