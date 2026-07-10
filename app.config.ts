@@ -2,27 +2,28 @@
 import "./scripts/load-env.js";
 import type { ExpoConfig } from "expo/config";
 
-const rawBundleId = "space.manus.mrium.mexc.trial.t20260709000000";
+const rawBundleId = "space.manus.mrium.mexc.trial.t20250709000000";
 const bundleId =
   rawBundleId
     .replace(/[-_]/g, ".")
     .replace(/[^a-zA-Z0-9.]/g, "")
-    .replace(/\.+/g, ".")
-    .replace(/^\.+|\.+$/g, "")
+    .replace(/\.{2,}/g, ".")
+    .replace(/^\.|\.$/g, "")
     .toLowerCase()
     .split(".")
     .map((segment) => {
       return /^[a-zA-Z]/.test(segment) ? segment : "x" + segment;
     })
     .join(".") || "space.manus.app";
+
 const timestamp = bundleId.split(".").pop()?.replace(/^t/, "") ?? "";
-const schemeFromBundleId = `manus${timestamp}`;
+const schemeFromBundleId = "manus" + (timestamp);
 
 const env = {
   appName: "Mrium MEXC Trial",
   appSlug: "mrium-mexc-trial",
   logoUrl: "manus-storage://icon_228ebb78.png",
-  scheme: schemeFromBundleId,
+  schema: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
 };
@@ -33,7 +34,7 @@ const config: ExpoConfig = {
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: env.scheme,
+  scheme: env.schema,
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {
@@ -45,7 +46,7 @@ const config: ExpoConfig = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#0a0e1a",
+      backgroundColor: "#0a0a1a",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -60,7 +61,7 @@ const config: ExpoConfig = {
         autoVerify: true,
         data: [
           {
-            scheme: env.scheme,
+            scheme: env.schema,
             host: "*",
           },
         ],
@@ -75,6 +76,8 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
+    "expo-font",
+    "expo-web-browser",
     [
       "expo-audio",
       {
@@ -94,9 +97,9 @@ const config: ExpoConfig = {
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
-        backgroundColor: "#0a0e1a",
+        backgroundColor: "#0a0a1a",
         dark: {
-          backgroundColor: "#0a0e1a",
+          backgroundColor: "#0a0a1a",
         },
       },
     ],
@@ -104,7 +107,7 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         android: {
-          buildArchs: ["armeabi-v7a", "arm64-v8a"],
+          buildArchitectures: ["armeabi-v7a", "arm64-v8a"],
           minSdkVersion: 24,
         },
       },
