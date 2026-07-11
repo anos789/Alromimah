@@ -2,7 +2,7 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "MY-Alromimah",
+  name: "mrium-mexc-trial",
   slug: "mrium-mexc-trial",
   version: "1.0.0",
   orientation: "portrait",
@@ -34,5 +34,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   experiments: {
     typedRoutes: true
-  }
+  },
+  owner: "alromimah"
 });
