@@ -1,0 +1,96 @@
+version: 2.1
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Executors
+# ──────────────────────────────────────────────────────────────────────────────
+executors:
+  node22:
+    docker:
+      - image: cimg/node:22.19
+    resource_class: medium
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Commands
+# ──────────────────────────────────────────────────────────────────────────────
+commands:
+  install-deps:
+    description: Activate pnpm via corepack, restore the content-addressable store from cache, install (link only when cache hits), then persist the store for the next run.
+    steps:
+      - run:
+          name: Activate pnpm
+          # corepack is bundled with Node 16+; this pins the exact version from
+          # packageManager field in package.json so CI matches local exactly.
+          command: corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+      - restore_cache:
+          # Exact match on lockfile content → full cache hit → install is just
+          # hardlinking from store (seconds). Fallback partial key still gives a
+          # warm store for new packages (avoids downloading everything from scratch).
+          keys:
+            - pnpm-store-v1-{{ checksum "pnpm-lock.yaml" }}
+            - pnpm-store-v1-
+
+      - run:
+          name: Install dependencies
+          # --frozen-lockfile ensures pnpm-lock.yaml is never mutated in CI.
+          command: pnpm install --frozen-lockfile
+
+      - save_cache:
+          # Key is stable for a given lockfile; CircleCI deduplicates concurrent
+          # saves so parallel jobs racing here is harmless.
+          key: pnpm-store-v1-{{ checksum "pnpm-lock.yaml" }}
+          paths:
+            - ~/.local/share/pnpm/store
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Jobs
+# ──────────────────────────────────────────────────────────────────────────────
+jobs:
+  lint:
+    executor: node22
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Lint (expo lint / ESLint)
+          command: pnpm lint
+
+  typecheck:
+    executor: node22
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: TypeScript type check (tsc --noEmit)
+          command: pnpm check
+
+  test:
+    executor: node22
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Unit tests (vitest)
+          command: pnpm test
+
+  build-server:
+    executor: node22
+    steps:
+      - checkout
+      - install-deps
+      - run:
+          name: Build server bundle (esbuild)
+          command: pnpm build
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Workflows
+# ──────────────────────────────────────────────────────────────────────────────
+workflows:
+  # Runs on every push / PR. All four quality gates execute in parallel so total
+  # wall-clock time equals the slowest single job rather than their sum.
+  ci:
+    jobs:
+      - lint
+      - typecheck
+      - test
+      - build-server
