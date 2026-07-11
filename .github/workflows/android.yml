@@ -17,13 +17,13 @@ jobs:
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8 # أو الإصدار الذي تفضله
+          version: 8
 
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'pnpm' # قمنا بتغيير الكاش إلى pnpm
+          cache: 'pnpm'
 
       - name: ⚙️ Setup Expo EAS
         uses: expo/expo-github-action@v8
@@ -33,7 +33,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
-        run: pnpm install # قمنا بتغيير الأمر إلى pnpm
+        run: pnpm install
 
       - name: 🚀 Build APK on EAS
         run: eas build --platform android --profile preview --non-interactive
