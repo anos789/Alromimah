@@ -40,7 +40,7 @@ jobs:
         run: pnpm install
 
       - name: 🛠 Link EAS Project Automatically
-        run: npx eas-cli project:init --non-interactive
+        run: npx eas-cli project:init --non-interactive --force
 
       - name: 🚀 Build APK on EAS
         run: eas build --platform android --profile preview --non-interactive
