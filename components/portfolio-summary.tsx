@@ -38,7 +38,7 @@ export function PortfolioSummary({
 
       {/* Profit row */}
       <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-xs text-muted">Today's P&L</Text>
+        <Text className="text-xs text-muted">Today&apos;s P&L</Text>
         <View className="flex-row items-center gap-2">
           <Text
             className={cn(
