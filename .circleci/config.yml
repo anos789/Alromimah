@@ -20,7 +20,7 @@ commands:
           name: Activate pnpm
           # corepack is bundled with Node 16+; this pins the exact version from
           # packageManager field in package.json so CI matches local exactly.
-          command: corepack enable && corepack prepare pnpm@9.12.0 --activate
+          command: sudo corepack enable && corepack prepare pnpm@9.12.0 --activate
 
       - restore_cache:
           # Exact match on lockfile content → full cache hit → install is just
