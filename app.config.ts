@@ -6,11 +6,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "mrium-mexc-trial",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/images/icon.png", // تأكد من وجود المسار أو قم بتعديله
+  icon: "./assets/images/icon.png",
   scheme: "myapp",
   userInterfaceStyle: "automatic",
   splash: {
-    image: "./assets/images/splash-icon.png", // تأكد من المسار
+    image: "./assets/images/splash-icon.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff"
   },
@@ -19,7 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png", // تأكد من المسار
+      foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff"
     },
     package: "com.alromimah.mriummexctrial"
