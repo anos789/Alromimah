@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View, Pressable } from "react-native";
+import { ScrollView, Text, View, Pressable, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { cn } from "@/lib/utils";
-import { useColors } from "@/hooks/use-colors";
 
 interface PerformanceData {
   day: string;
@@ -40,7 +38,6 @@ const rewards: RewardRecord[] = [
 ];
 
 export default function ReportsScreen() {
-  const colors = useColors();
   const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">("weekly");
 
   const totalPnl = weeklyData.reduce((s, d) => s + d.pnl, 0);

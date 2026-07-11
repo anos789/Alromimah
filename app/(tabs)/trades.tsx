@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View, Pressable, FlatList } from "react-native";
+import { ScrollView, Text, View, Pressable, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { cn } from "@/lib/utils";

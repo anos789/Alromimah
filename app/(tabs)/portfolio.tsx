@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View, Pressable } from "react-native";
+import { ScrollView, Text, View, Pressable, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { cn } from "@/lib/utils";
-import { useColors } from "@/hooks/use-colors";
 
 interface Position {
   id: number;
@@ -45,7 +43,6 @@ const positions: Position[] = [
 ];
 
 export default function PortfolioScreen() {
-  const colors = useColors();
   const [selectedFilter, setSelectedFilter] = useState<"all" | "long" | "short">("all");
 
   const totalBalance = 1247.38;

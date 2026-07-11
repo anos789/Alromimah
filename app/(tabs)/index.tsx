@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View, Pressable, Image, Alert } from "react-native";
+import { ScrollView, Text, View, Pressable, Alert, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
 import { CandlestickChart, generateSampleCandles } from "@/components/candlestick-chart";
@@ -14,15 +13,12 @@ import { TradingInfo } from "@/components/trading-info";
 import { PortfolioSummary } from "@/components/portfolio-summary";
 import { RewardsHarvester } from "@/components/rewards-harvester";
 import { cn } from "@/lib/utils";
-import { useColors } from "@/hooks/use-colors";
 
 export default function HomeScreen() {
-  const colors = useColors();
-
   // Bot state
   const [botOn, setBotOn] = useState(true);
   const [mode, setMode] = useState<"cloud" | "manual">("cloud");
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected] = useState(true);
 
   // Trading params
   const [totalInvestment, setTotalInvestment] = useState("200");

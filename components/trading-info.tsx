@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { useColors } from "@/hooks/use-colors";
+import React from "react";
+import { View, Text, TextInput } from "react-native";
 import { cn } from "@/lib/utils";
 
 interface TradingInfoProps {
@@ -20,8 +19,6 @@ export function TradingInfo({
   onChangePerTrade,
   onChangeLeverage,
 }: TradingInfoProps) {
-  const colors = useColors();
-
   const fields = [
     { label: "Total Investment", sublabel: "USDT", value: totalInvestment, onChange: onChangeInvestment, prefix: "$" },
     { label: "Amount Per Trade", sublabel: "Positive & Negative", value: perTradeAmount, onChange: onChangePerTrade, prefix: "±" },

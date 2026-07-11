@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
-import { useColors } from "@/hooks/use-colors";
 import { cn } from "@/lib/utils";
 
 interface ModeToggleProps {
@@ -9,8 +8,6 @@ interface ModeToggleProps {
 }
 
 export function ModeToggle({ mode, onToggle }: ModeToggleProps) {
-  const colors = useColors();
-
   return (
     <View className="flex-row gap-3 w-full">
       <Pressable

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, Animated, Easing } from "react-native";
+import { View, Pressable, Animated, Easing, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
 
 interface BotStatusToggleProps {
   isOn: boolean;

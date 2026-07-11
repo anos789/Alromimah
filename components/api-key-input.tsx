@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
-import { useColors } from "@/hooks/use-colors";
 import { cn } from "@/lib/utils";
 
 interface ApiKeyInputProps {
@@ -12,7 +11,6 @@ interface ApiKeyInputProps {
 }
 
 export function ApiKeyInput({ label, value, onChange, connected, placeholder }: ApiKeyInputProps) {
-  const colors = useColors();
   const [showValue, setShowValue] = useState(false);
 
   return (

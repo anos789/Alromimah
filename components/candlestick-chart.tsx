@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { View, Text } from "react-native";
-import { Svg, Rect, Line, Text as SvgText } from "react-native-svg";
+import { Svg, Rect, Line } from "react-native-svg";
 import { cn } from "@/lib/utils";
 
 interface Candle {

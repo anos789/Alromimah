@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Animated, Easing } from "react-native";
-import { useColors } from "@/hooks/use-colors";
 
 export function RewardsHarvester() {
-  const colors = useColors();
   const [countdown, setCountdown] = useState(600); // 10 minutes in seconds
-  const [progress, setProgress] = useState(new Animated.Value(1));
+  const [progress] = useState(new Animated.Value(1));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,7 +31,7 @@ export function RewardsHarvester() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [progress]);
 
   const minutes = Math.floor(countdown / 60);
   const seconds = countdown % 60;

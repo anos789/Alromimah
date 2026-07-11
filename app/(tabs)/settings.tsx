@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View, Pressable, TextInput, Alert, Switch } from "react-native";
-import * as Haptics from "expo-haptics";
-import { Platform } from "react-native";
-import * as SecureStore from "expo-secure-store";
+import { ScrollView, Text, View, Pressable, TextInput, Switch } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
-import { cn } from "@/lib/utils";
-import { useColors } from "@/hooks/use-colors";
 
 interface SettingItemProps {
   icon: string;
@@ -45,7 +40,6 @@ function SettingItem({ icon, title, subtitle, onPress, children, hasArrow = true
 }
 
 export default function SettingsScreen() {
-  const colors = useColors();
   const [notifications, setNotifications] = useState(true);
   const [cloudSync, setCloudSync] = useState(true);
   const [biometricLock, setBiometricLock] = useState(false);
