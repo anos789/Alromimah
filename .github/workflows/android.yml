@@ -44,3 +44,5 @@ jobs:
 
       - name: 🚀 Build APK on EAS
         run: eas build --platform android --profile preview --non-interactive
+
+# ci: trigger rerun 2026-07-11T23:35:00Z - authorized rerun to force link and start build
