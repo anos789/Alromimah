@@ -1,15 +1,28 @@
-name: Build Mobile App
-
-# 1. تحديد متى يتم تشغيل البناء تلقائياً (Trigger)
-on:
-  push:
-    branches:
-      - main # استبدله باسم فرعك مثل master أو main
-
-jobs:
-  build_android:
-    type: build
-    params:
-      platform: android
-      profile: preview
-      
+{
+  "cli": {
+    "version": ">= 10.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
