@@ -3,7 +3,7 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "mrium-mexc-trial",
-  slug: "alromimah", // 🎯 تم التعديل هنا ليطابق المشروع السحابي
+  slug: "alromimah", // 🎯 تم التعديل هنا ليطابق قاعدة البيانات السحابية
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
