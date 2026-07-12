@@ -26,7 +26,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: 'pnpm'
 
       - name: ⚙️ Setup Expo EAS
@@ -38,6 +38,16 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
+
+      - name: 🔧 Compile app.config.ts to CommonJS for CI
+        run: |
+          # Ensure esbuild (devDependency) is available from node_modules
+          pnpm exec -- esbuild app.config.ts --bundle --platform=node --outfile=app.config.cjs --format=cjs || true
+          # If esbuild isn't available, fall back to a simple TypeScript transpile using npx (will install temporarily)
+          if [ ! -f app.config.cjs ]; then
+            echo "esbuild not available, using npx to transpile app.config.ts"
+            npx -y -p typescript tsc --module commonjs --outFile app.config.cjs app.config.ts || true
+          fi
 
       - name: 🛠 Link EAS Project Automatically
         run: npx eas-cli project:init --non-interactive --force
