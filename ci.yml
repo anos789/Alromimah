@@ -27,7 +27,8 @@ jobs:
 
       - name: 📥 Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: 🏗️ Build Project
-        run: pnpm run build # استبدل build بأمر التشغيل الخاص بمشروعك إن لزم الأمر
         
+      - name: 🏗️ Build Android APK via EAS
+        run: pnpm exec eas build --platform android --profile preview --local --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
