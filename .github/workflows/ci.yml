@@ -26,6 +26,7 @@ jobs:
         run: pnpm install
 
       - name: 🏗️ Build Android APK via EAS
-        run: pnpm exec eas build --platform android --profile preview --local --non-interactive
+        # استبدلنا exec بـ dlx لتنزيل الأداة وتشغيلها مباشرة دون الحاجة لتعريفها في package.json
+        run: pnpm dlx eas-cli build --platform android --profile preview --local --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
