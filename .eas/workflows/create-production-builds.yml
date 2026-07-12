@@ -1,8 +1,15 @@
 name: Build Mobile App
 
+# 1. تحديد متى يتم تشغيل البناء تلقائياً (Trigger)
+on:
+  push:
+    branches:
+      - main # استبدله باسم فرعك مثل master أو main
+
 jobs:
   build_android:
     type: build
     params:
       platform: android
       profile: preview
+      
