@@ -36,22 +36,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true
   },
   owner: "alromimah",
-  
-  // 🚀 أضف هذا الجزء هنا بالرقم الذي استخرجناه من الـ Terminal
   extra: {
     eas: {
-    let projectId;
-if (process.env.APP === 'app1') {
-  projectId = '843ed5f1-e136-48a1-b5e2-c61e26022cf3';
-} else if (process.env.APP === 'app2') {
-  projectId = '843ed5f1-e136-48a1-b5e2-c61e26022cf3';
-}
-export default {
-  name: 'testapp',
-  slug: process.env.APP,
-  extra: {
-    eas:  {
-      projectId
+      projectId: "843ed5f1-e136-48a1-b5e2-c61e26022cf3"
     }
   }
-}
+});
