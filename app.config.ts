@@ -42,9 +42,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     eas: {
     let projectId;
 if (process.env.APP === 'app1') {
-  projectId = '23847707-bf15-424c-b1dc-7a57fc34a23d';
+  projectId = '843ed5f1-e136-48a1-b5e2-c61e26022cf3';
 } else if (process.env.APP === 'app2') {
-  projectId = 'db096609-2c67-431d-b83d-88cabf8511b1';
+  projectId = '843ed5f1-e136-48a1-b5e2-c61e26022cf3';
 }
 export default {
   name: 'testapp',
