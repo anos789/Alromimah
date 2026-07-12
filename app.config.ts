@@ -40,7 +40,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   // 🚀 أضف هذا الجزء هنا بالرقم الذي استخرجناه من الـ Terminal
   extra: {
     eas: {
-      projectId: "b38b34b9-7c24-4c2b-91e1-534f663cfd8"
+    let projectId;
+if (process.env.APP === 'app1') {
+  projectId = '23847707-bf15-424c-b1dc-7a57fc34a23d';
+} else if (process.env.APP === 'app2') {
+  projectId = 'db096609-2c67-431d-b83d-88cabf8511b1';
+}
+export default {
+  name: 'testapp',
+  slug: process.env.APP,
+  extra: {
+    eas:  {
+      projectId
     }
   }
-});
+}
