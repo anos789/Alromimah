@@ -35,5 +35,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   experiments: {
     typedRoutes: true
   },
-  owner: "alromimah"
+  owner: "alromimah",
+  
+  // 🚀 أضف هذا الجزء هنا بالرقم الذي استخرجناه من الـ Terminal
+  extra: {
+    eas: {
+      projectId: "b38b34b9-7c24-4c2b-91e1-534f663cfd8"
+    }
+  }
 });
