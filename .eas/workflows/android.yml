@@ -1,9 +1,16 @@
 name: Android EAS Build (APK)
 
+# 1. تحديد متى يتم تشغيل سير العمل تلقائياً (مثلاً عند الدفع لفرع main)
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build_android:
     name: Build Android APK
-    type: build
+    type: build # نوع الوظيفة المعتمد في EAS Workflows
     params:
       platform: android
-      profile: preview
+      profile: preview # سيعتمد على إعداد الـ preview داخل ملف eas.json الخاص بك
+      
