@@ -4,7 +4,7 @@
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
-    "dev": "concurrently -k \"pnpm dev:server\" \"pnpm dev:metro\"",
+    "dev": "concurrently -k \"npm run dev:server\" \"npm run dev:metro\"",
     "dev:server": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
     "dev:metro": "cross-env EXPO_USE_METRO_WORKSPACE_ROOT=1 npx expo start --web --port ${EXPO_PORT:-8081}",
     "build": "esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
@@ -14,16 +14,16 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "qr": "node scripts/generate_qr.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "^2.2.0",
-    "@react-navigation/bottom-tabs": "^7.8.12",
+    "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.9.2",
-    "@react-navigation/native": "^7.1.25",
+    "@react-navigation/native": "^7.1.8",
     "@tanstack/react-query": "^5.90.12",
     "@trpc/client": "11.7.2",
     "@trpc/react-query": "11.7.2",
@@ -35,6 +35,7 @@
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.44.7",
     "expo": "~54.0.29",
+    "expo-asset": "~12.0.13",
     "expo-audio": "~1.1.0",
     "expo-build-properties": "^1.0.10",
     "expo-constants": "~18.0.12",
@@ -90,6 +91,5 @@
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "vitest": "^2.1.9"
-  },
-  "packageManager": "pnpm@9.12.0"
+  }
 }

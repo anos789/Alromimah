@@ -22,7 +22,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff"
     },
-    package: "com.alromimah.mriummexctrial"
+    package: "com.alromimah.mriummexctrial",
+    permissions: [
+      "INTERNET",
+      "SYSTEM_ALERT_WINDOW"
+    ]
   },
   web: {
     bundler: "metro",
@@ -30,7 +34,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: "./assets/images/favicon.png"
   },
   plugins: [
-    "expo-router"
+    "expo-router",
+    [
+      "expo-build-properties",
+      {
+        "android": {
+          "enableProguardInReleaseBuilds": true,
+          "enableShrinkResourcesInReleaseBuilds": true
+        }
+      }
+    ]
   ],
   experiments: {
     typedRoutes: true
