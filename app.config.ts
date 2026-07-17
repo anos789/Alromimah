@@ -15,7 +15,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: "#ffffff"
   },
   ios: {
-    supportsTablet: true
+    supportsTablet: true,
+    bundleIdentifier: "com.alromimah.mriummexctrial",
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false
+    }
   },
   android: {
     adaptiveIcon: {
